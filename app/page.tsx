@@ -1,7 +1,14 @@
-import Image from "next/image";
+import { getServer } from "@/api/getServer";
+import { DataPosts } from "@/interface";
 
-export default function Home() {
+export default async function Home() {
+  const data: DataPosts[] = await getServer('posts')
+  console.log(data)
   return (
-    <div className="bg-blue-400">Test</div>
+    <div className="">
+      {data.map((row) => (
+        <div key={row.id}>{row.title}</div>
+      ))}
+    </div>
   );
 }
