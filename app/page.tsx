@@ -1,12 +1,12 @@
 import { getServer } from "@/api/getServer";
+import ComponentLayout from "@/components/layout";
 import { DataPosts } from "@/interface";
 import Link from "next/link";
 
 export default async function Home() {
   const data: DataPosts[] = await getServer('posts')
   return (
-    <div className="flex px-4 justify-center dark:bg-black">
-      <div>
+    <ComponentLayout>
         {data.map((row) => (
           <Link key={row.id} href={`/detail/${row.id}`}>
             <div className="sm:w-[500px] transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-110 duration-300 border-2 rounded-lg border-blue-400 dark:border-white p-4 my-4 cursor-pointer">
@@ -15,7 +15,6 @@ export default async function Home() {
             </div>
           </Link>
         ))}
-      </div>
-    </div>
+    </ComponentLayout>
   );
 }
