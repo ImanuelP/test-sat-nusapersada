@@ -2,7 +2,7 @@
 export const getServer = async (page: string) => {
     try {
         const resData = await fetch(`${process.env.LINK_API}${page}`, {
-          next: { revalidate: 60 },
+          next: { revalidate: 1 },
         });
         if (!resData.ok) {
            console.log("error");
