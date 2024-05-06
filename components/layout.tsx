@@ -8,7 +8,7 @@ const ComponentLayout: FC<Props> = (props) => {
     return (
         <div className="flex p-4 justify-center">
             <div>
-                <div className="h-[90vh] overflow-auto">{children}</div>
+                <div className="h-[96vh] overflow-auto">{children}</div>
             </div>
         </div>
     )

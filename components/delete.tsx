@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from "next/navigation"
 import { FC } from "react"
 
 interface Props {
@@ -6,6 +7,7 @@ interface Props {
 }
 const Delete: FC<Props> = (props) => {
     const { id } = props
+    const router = useRouter()
     
   const deletePost = async (id: string) => {
     try {
@@ -14,6 +16,7 @@ const Delete: FC<Props> = (props) => {
       });
       if (!response.ok) throw alert('Failed to delete post');
       alert('Success to Delete')
+      router.push('/')
     //   setPosts(posts.filter(post => post.id !== id));
     } catch (error) {
       console.error('Error deleting post:', error);

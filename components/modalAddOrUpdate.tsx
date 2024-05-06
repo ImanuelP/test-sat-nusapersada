@@ -1,4 +1,7 @@
-import { FC } from "react"
+'use client'
+
+import { DataPosts } from "@/interface"
+import { FC, useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 
 type Inputs = {
@@ -8,33 +11,66 @@ type Inputs = {
 
 interface Props {
     onClose: () => void
+    post?: DataPosts[]
+    setPost?: Function
+    detail?: DataPosts | any
+    setDetail?: Function
+    id?: string | null
 }
 const ModalAddOrUpdate: FC<Props> = (props) => {
-    const {onClose} = props
+    const {onClose, id = null, post = [], setPost = () => { }, detail = {}, setDetail = () => {}} = props
     const {
         register,
         handleSubmit,
         watch,
+        setValue,
         formState: { errors },
     } = useForm<Inputs>()
+
+    useEffect(() => {
+        if (id) {
+            setValue('body', detail.body)
+            setValue('title', detail.title)
+        }
+    }, [id, detail])
     const onSubmit: SubmitHandler<Inputs> = async (datas: Inputs) => {
-        // if (datas) {
-        try {
-            const response: any = await fetch(`${process.env.LINK_API}posts`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(datas)
-            });
-            if (!response.ok) throw new Error('Failed to add post');
-            alert('Success to create new data')
-            const data = await response.json();
-            return data
-          } catch (error) {
-            console.error('Error adding post:', error);
-          }
-        // }
+        if (id) {
+            try {
+                const response: any = await fetch(`${process.env.LINK_API}posts/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+                });
+                if (!response.ok) throw new Error('Failed to add post');
+                onClose()
+                alert('Success to update new data')
+                const data = await response.json();
+                setDetail(data)
+                return data
+            } catch (error) {
+                console.error('Error adding post:', error);
+            }
+        } else {
+            try {
+                const response: any = await fetch(`${process.env.LINK_API}posts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datas)
+                });
+                if (!response.ok) throw new Error('Failed to add post');
+                onClose()
+                alert('Success to create new data')
+                const data = await response.json();
+                setPost([data, ...post])
+                return data
+            } catch (error) {
+                console.error('Error adding post:', error);
+            }
+        }
     }
     return (
         <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
